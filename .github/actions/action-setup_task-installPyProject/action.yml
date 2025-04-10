@@ -49,14 +49,6 @@ runs:
         sparse-checkout: ${{ inputs.sparse-checkout }}
         sparse-checkout-cone-mode: ${{ inputs.sparse-checkout-cone-mode }}
 
-    # Setup & configure dependency manager
-    - name: Cache manager installation
-      uses: actions/cache@v4
-      id: cached-manager
-      with:
-        path: ~/.local
-        key: ${{ runner.os }}-${{ inputs.manager }}-${{ inputs.cache-id }}
-
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       if: inputs.manager == 'uv' && steps.cached-manager.outputs.cache-hit != 'true'

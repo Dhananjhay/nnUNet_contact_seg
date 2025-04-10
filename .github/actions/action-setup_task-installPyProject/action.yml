@@ -55,11 +55,6 @@ runs:
       with:
         virtualenvs-create: true
 
-    # Setup & configure Python
-    - name: Create cache-key file
-      shell: bash
-      run: echo "${{ inputs.cache-key }}" >> .git/x-gh-cache-key
-
     - name: Setup python
       uses: actions/setup-python@v5
       id: setup-python
@@ -68,7 +63,6 @@ runs:
         cache: "${{ inputs.manager }}"
         cache-dependency-path: |
           **/uv.lock
-          .git/x-gh-cache-key
 
     - name: Install library
       if: inputs.manager == 'uv' && inputs.install-library == 'true'

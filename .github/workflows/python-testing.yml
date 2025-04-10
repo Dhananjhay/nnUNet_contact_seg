@@ -25,13 +25,13 @@ jobs:
           python-version: "3.9"
 
       - name: isort
-        run: poetry run isort hippunfold/*.py -c
+        run: poe isort nnunet_contact_seg/*.py -c
 
       - name: Black
-        run: poetry run black hippunfold --check
+        run: poe black nnunet_contact_seg --check
 
       - name: snakefmt
-        run: poetry run snakefmt hippunfold --check
+        run: poe snakefmt nnunet_contact_seg --check
 
   test:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           install-library: true
 
-      - name: Setup env for hippunfold
+      - name: Setup env for nnunet_contact_seg
         run: |
           echo "nnUNet_SEEG_CACHE_DIR=`pwd`/tests/data/nnunet_seeg_cache_dir" >> $GITHUB_ENV
 

@@ -51,8 +51,9 @@ runs:
 
     - name: Install uv
       uses: astral-sh/setup-uv@v5
-      if: inputs.manager == 'uv' && steps.cached-manager.outputs.cache-hit != 'true'
+      if: inputs.manager == 'uv'
       with:
+        enable-cache: true
         virtualenvs-create: true
 
     - name: Setup python

@@ -1,22 +1,11 @@
 ---
 # Adapted from @pvandyken's composite action
-name: Build and cache Python project
+name: Build Python project
 description: Install project dependencies and optionally install project
 inputs:
   python-version:
     description: Python version to setup
     required: true
-  cache-id:
-    description: |
-      Reference id to define cache. This id should be unique to the commit or PR
-      (e.g. the PR id or git hash)
-    required: false
-    default: ${{ github.event.pull_request.id || github.event.after }}
-  cache-key:
-    description: |
-      Unique key to identify cache. This id should be unique to the job step
-      (e.g. 'test', 'docs')
-    required: false
   manager:
     description: Dependency manager used (e.g. uv)
     required: false
@@ -53,7 +42,6 @@ runs:
       uses: astral-sh/setup-uv@v5
       if: inputs.manager == 'uv'
       with:
-        enable-cache: true
         virtualenvs-create: true
 
     - name: Setup python
@@ -61,9 +49,6 @@ runs:
       id: setup-python
       with:
         python-version: ${{ inputs.python-version }}
-        cache: "${{ inputs.manager }}"
-        cache-dependency-path: |
-          **/uv.lock
 
     - name: Install library
       if: inputs.manager == 'uv' && inputs.install-library == 'true'

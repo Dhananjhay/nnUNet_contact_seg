@@ -50,6 +50,11 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
+    - name: Create virtual environment
+      if: inputs.manager == "uv"
+      shell: bash
+      run: uv venv
+
     - name: Install library
       if: inputs.manager == 'uv' && inputs.install-library == 'true'
       shell: bash

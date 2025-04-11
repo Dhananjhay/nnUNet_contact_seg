@@ -53,4 +53,4 @@ runs:
     - name: Install library
       if: inputs.manager == 'uv' && inputs.install-library == 'true'
       shell: bash
-      run: uv pip install . --extras dev
+      run: uv pip install -r pyproject.toml --all-extras

@@ -23,6 +23,8 @@ jobs:
         uses: ./.github/actions/action-setup_task-installPyProject
         with:
           python-version: "3.9"
+          install-library: "true"
+          manager: "uv"
 
       - name: Quality check (isort, Black, and snakefmt)
         run: uv run poe quality_check

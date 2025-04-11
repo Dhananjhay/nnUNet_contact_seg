@@ -51,7 +51,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - name: Create virtual environment
-      if: inputs.manager == "uv"
+      if: inputs.manager == 'uv'
       shell: bash
       run: uv venv
 

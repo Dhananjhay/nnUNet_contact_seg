@@ -61,4 +61,4 @@ jobs:
 
       - name: Test single T2w bids
         run: |
-          nnunet_contact_seg tests/data/ test_out participant -np --label --transform
+          uv run nnunet_contact_seg tests/data/ test_out participant -np --label --transform

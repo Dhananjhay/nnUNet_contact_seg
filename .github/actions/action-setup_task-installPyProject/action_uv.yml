@@ -1,0 +1,69 @@
+---
+# Adapted from @pvandyken's composite action
+name: Build Python project
+description: Install project dependencies and optionally install project
+inputs:
+  python-version:
+    description: Python version to setup
+    required: true
+  manager:
+    description: Dependency manager used (e.g. uv)
+    required: false
+    default: "uv"
+  install-library:
+    description: |
+      Indicate if project library should be installed. 'true' installs from
+      cloned repo, false skips install
+    required: false
+    default: "false"
+  sparse-checkout:
+    description: enables sparse-checkout on actions/checkout
+    required: false
+  sparse-checkout-cone-mode:
+    description: |
+      Specifies whether to use cone-mode when doing a sparse checkout.
+    required: false
+outputs:
+  python-version:
+    description: "Resolved python version as reported by setup-python"
+    value: ${{ steps.setup-python.outputs.python-version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Clone repo
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.base_ref }}
+        sparse-checkout: ${{ inputs.sparse-checkout }}
+        sparse-checkout-cone-mode: ${{ inputs.sparse-checkout-cone-mode }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      if: inputs.manager == 'uv'
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+        virtualenvs-create: true
+        version: '0.6.14'
+
+    - name: Setup python
+      uses: actions/setup-python@v5
+      id: setup-python
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Create virtual environment
+      if: inputs.manager == 'uv'
+      shell: bash
+      run: uv venv
+
+    - name: Install library
+      if: inputs.manager == 'uv' && inputs.install-library == 'true'
+      shell: bash
+      run: uv pip install -r pyproject.toml --all-extras
+
+    # ... install packages, run tests, etc ...
+    - name: Minimize uv cache
+      shell: bash
+      run: uv cache prune --ci

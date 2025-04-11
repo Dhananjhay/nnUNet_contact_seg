@@ -72,6 +72,11 @@ runs:
       with:
         virtualenvs-create: true
 
+    - name: Create virtual environment
+      if: inputs.manager == 'uv'
+      shell: bash
+      run: uv venv
+
     # Setup & configure Python
     - name: Create cache-key file
       shell: bash
@@ -96,11 +101,6 @@ runs:
       shell: bash
       run: >
         uv pip install -r pyproject.toml --extra ${{ inputs.install-deps-with }}
-
-    - name: Create virtual environment
-      if: inputs.manager == 'uv'
-      shell: bash
-      run: uv venv
     
     - name: Install library
       if: inputs.manager == 'uv' && inputs.install-library == 'true'

@@ -72,4 +72,5 @@ runs:
 
     # ... install packages, run tests, etc ...
     - name: Minimize uv cache
+      shell: bash
       run: uv cache prune --ci

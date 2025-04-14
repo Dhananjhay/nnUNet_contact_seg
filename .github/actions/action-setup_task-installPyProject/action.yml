@@ -6,12 +6,6 @@ inputs:
   python-version:
     description: Python version to setup
     required: true
-  cache-id:
-    description: |
-      Reference id to define cache. This id should be unique to the commit or PR
-      (e.g. the PR id or git hash)
-    required: false
-    default: ${{ github.event.pull_request.id || github.event.after }}
   manager:
     description: Dependency manager used (e.g. uv)
     required: false
@@ -46,10 +40,6 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Set UV_CACHE_DIR
-      shell: bash
-      run: echo "UV_CACHE_DIR=/tmp/.uv_cache" >> $GITHUB_ENV
-
     - name: Clone repo
       uses: actions/checkout@v4
       with:
@@ -59,9 +49,13 @@ runs:
 
     - name: Install uv
       uses: astral-sh/setup-uv@v5
+      id: install-uv
       if: inputs.manager == 'uv'
       with:
         version: '0.6.14'
+        enable-cache: true
+        cache-dependency-glob: |
+          **/uv.lock
 
     - name: Setup python
       uses: actions/setup-python@v5
@@ -74,19 +68,10 @@ runs:
       shell: bash
       run: uv venv
 
-    - name: Restore uv cache
-      uses: actions/cache@v4
-      with:
-        path: /tmp/.uv_cache
-        key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
-        restore-keys: |
-          uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
-          uv-${{ runner.os }}
-
     # Install dependencies with manager, if necessary
     - name: Install dependencies (with)
       if: >
-        inputs.manager == 'uv' && ! inputs.install-deps-only
+        inputs.manager == 'uv' && steps.install-uv.outputs.cache-hit != 'true' && ! inputs.install-deps-only
       shell: bash
       run: >
         uv pip install -r pyproject.toml --extra ${{ inputs.install-deps-with }}
@@ -95,17 +80,4 @@ runs:
       if: inputs.manager == 'uv' && inputs.install-library == 'true'
       shell: bash
       run: uv pip install -e .
-
-    - name: Minimize uv cache
-      shell: bash
-      run: uv cache prune --ci
-      env:
-        UV_CACHE_DIR: /tmp/.uv_cache
-
-    # - name: Save uv cache
-    #   if: always()
-    #   uses: actions/cache/save@v4
-    #   with:
-    #     path: ~/.cache/uv
-    #     key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
     

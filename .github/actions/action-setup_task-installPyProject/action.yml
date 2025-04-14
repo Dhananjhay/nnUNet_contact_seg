@@ -91,9 +91,9 @@ runs:
     - name: Install library
       if: inputs.manager == 'uv' && inputs.install-library == 'true'
       shell: bash
-      run: uv pip install -e . --all-extras
+      run: uv pip install -e .
 
-    # ... install packages, run tests, etc ...
-    - name: Minimize uv cache
-      shell: bash
-      run: uv cache prune --ci
+    # # ... install packages, run tests, etc ...
+    # - name: Minimize uv cache
+    #   shell: bash
+    #   run: uv cache prune --ci

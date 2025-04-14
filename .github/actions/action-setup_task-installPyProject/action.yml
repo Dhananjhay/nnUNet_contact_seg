@@ -107,6 +107,8 @@ runs:
     - name: Minimize uv cache
       shell: bash
       run: uv cache prune --ci
+      env:
+        UV_CACHE_DIR: /tmp/.uv_cache
 
     # - name: Save uv cache
     #   if: always()

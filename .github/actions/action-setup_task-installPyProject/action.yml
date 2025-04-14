@@ -54,6 +54,7 @@ runs:
       with:
         version: '0.6.14'
         enable-cache: true
+        prune-cache: false
         cache-dependency-glob: |
           **/uv.lock
 
@@ -71,7 +72,7 @@ runs:
     # Install dependencies with manager, if necessary
     - name: Install dependencies (with)
       if: >
-        inputs.manager == 'uv' && steps.install-uv.outputs.cache-hit != 'true' && ! inputs.install-deps-only
+        inputs.manager == 'uv' && ! inputs.install-deps-only
       shell: bash
       run: >
         uv pip install -r pyproject.toml --extra ${{ inputs.install-deps-with }}

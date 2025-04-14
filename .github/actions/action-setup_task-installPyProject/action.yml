@@ -100,6 +100,14 @@ runs:
       shell: bash
       run: uv pip install -e .
 
-    # - name: Minimize uv cache
-    #   shell: bash
-    #   run: uv cache prune --ci
+    - name: Minimize uv cache
+      shell: bash
+      run: uv cache prune --ci
+
+    - name: Save uv cache
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: ~/.cache/uv
+        key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+    

@@ -65,8 +65,6 @@ runs:
       uses: astral-sh/setup-uv@v5
       if: inputs.manager == 'uv' && steps.cached-manager.outputs.cache-hit != 'true'
       with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
         version: '0.6.14'
 
     - name: Setup python

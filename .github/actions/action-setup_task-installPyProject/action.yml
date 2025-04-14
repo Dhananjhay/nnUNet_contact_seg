@@ -54,15 +54,11 @@ runs:
       with:
         version: '0.6.14'
         enable-cache: true
-        prune-cache: false
         cache-dependency-glob: |
           **/uv.lock
 
-    - name: Setup python
-      uses: actions/setup-python@v5
-      id: setup-python
-      with:
-        python-version: ${{ inputs.python-version }}
+    - name: Install python
+      run: uv python install ${{ inputs.python-version }}
 
     - name: Create virtual environment
       if: inputs.manager == 'uv'

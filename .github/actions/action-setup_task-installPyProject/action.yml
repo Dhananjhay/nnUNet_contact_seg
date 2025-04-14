@@ -84,9 +84,9 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/uv
-        key: uv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+        key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
         restore-keys: |
-          uv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
           uv-${{ runner.os }}
 
     # Install dependencies with manager, if necessary
@@ -102,6 +102,6 @@ runs:
       shell: bash
       run: uv pip install -e .
 
-    - name: Minimize uv cache
-      shell: bash
-      run: uv cache prune --ci
+    # - name: Minimize uv cache
+    #   shell: bash
+    #   run: uv cache prune --ci

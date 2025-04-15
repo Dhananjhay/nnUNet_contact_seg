@@ -88,10 +88,6 @@ runs:
       shell: bash
       run: uv venv
 
-    - name: Show uv cache contents
-      shell: bash
-      run: uv cache list
-
     # Install dependencies with manager, if necessary
     - name: Install dependencies (with)
       if: >

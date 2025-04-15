@@ -41,6 +41,7 @@ runs:
   using: composite
   steps:
     - name: Setup env for uv cache dir
+      shell: bash
       run: |
         echo "UV_CACHE_DIR=/tmp/.uv-cache" >> $GITHUB_ENV
 

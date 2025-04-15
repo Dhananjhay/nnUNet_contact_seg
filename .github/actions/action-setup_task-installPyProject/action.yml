@@ -46,6 +46,10 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Set UV cache env
+      shell: bash
+      run: echo "UV_CACHE_DIR=/home/runner/work/_temp/setup-uv-cache" >> $GITHUB_ENV
+    
     - name: Clone repo
       uses: actions/checkout@v4
       with:
